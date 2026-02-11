@@ -3,18 +3,17 @@ import "bootstrap";
 
 import { getIpInfo, getCountryFlag } from "./services/countryService.js";
 import { getNews } from "./services/newsService.js";
+import { limitWords } from "./utils.mjs";
 
 const data = await getIpInfo();
 // display location info on the page
 async function showLocation() {
   const container = document.getElementById("locationInfo");
 
-  container.innerHTML = `
-    <h5>Your Location</h5>
-    <p><strong>IP:</strong> ${data.ip}</p>
-    <p><strong>Country:</strong> ${data.countryName}</p>
-    <p><strong>City:</strong> ${data.city}</p>
-  `;
+  const country = document.createElement("p");
+  country.textContent = `Country: ${data.countryName}`;
+
+  container.appendChild(country);
 }
 
 async function displayFlag() {
@@ -22,33 +21,57 @@ async function displayFlag() {
   const flagData = await getCountryFlag(countryCode);
   const flagContainer = document.getElementById("countryFlag");
 
-  flagContainer.innerHTML = ` 
-    <img src="${flagData.rectangle_image_url}" alt="Country Flag" class="img-fluid">
-    `;
+  const image = document.createElement("img");
+  image.src = flagData.rectangle_image_url;
+  image.alt = `${flagData.country} Flag`;
+  image.classList.add("img-fluid");
+
+  flagContainer.appendChild(image);
 }
 
-async function displayNews(countryCode) {
+async function displayNews(country) {
   const newsContainer = document.getElementById("newsContainer");
-  const articles = await getNews("US");
+  const countryName = data.countryName;
+
 
   try {
-    newsContainer.innerHTML = `
-      <h5>Latest News</h5>
-      ${articles
-        .map(
-          (article) => `
-        <div class="card mb-2">
-          <div class="card-body">
-            <h6 class="card-title">${article.title}</h6>
-            <p class="card-text">${article.description}</p>
-          </div>
-        </div>
-      `,
-        )
-        .join("")}
-    `;
+    const articles = await getNews(countryName);
+
+    // Clear previous content
+    newsContainer.textContent = "";
+
+    // Create title
+    const title = document.createElement("h5");
+    title.textContent = "Latest News";
+    newsContainer.append(title);
+
+    // Create article cards
+    articles.forEach((article) => {
+      const card = document.createElement("div");
+      card.className = "card mb-2";
+
+      const cardBody = document.createElement("div");
+      cardBody.className = "card-body";
+
+      const cardTitle = document.createElement("h6");
+      cardTitle.className = "card-title";
+      cardTitle.textContent = article.title;
+
+      const cardText = document.createElement("p");
+      cardText.className = "card-text";
+      cardText.textContent = limitWords(article.body);
+    
+
+      cardText.addEventListener("click", () => {
+        window.open(article.url, "_blank");
+      });
+
+      cardBody.append(cardTitle, cardText);
+      card.append(cardBody);
+      newsContainer.append(card);
+    });
   } catch (error) {
-    newsContainer.innerHTML = `<p>Error fetching news: ${error.message}</p>`;
+    newsContainer.textContent = `Error fetching news: ${error.message}`;
   }
 }
 
