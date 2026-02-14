@@ -41,4 +41,3 @@ export async function getNews(country) {
     throw error;
   }
 }
-
