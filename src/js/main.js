@@ -3,78 +3,62 @@ import "bootstrap";
 
 import { getIpInfo, getCountryFlag } from "./services/countryService.js";
 import { getNews } from "./services/newsService.js";
-import { limitWords } from "./utils.mjs";
 
-const data = await getIpInfo();
-// display location info on the page
-async function showLocation() {
-  const container = document.getElementById("locationInfo");
+import { renderLocation } from "./ui/locationUI.js";
+import { renderFlag } from "./ui/flagUI.js";
+import { renderNews } from "./ui/newsUI.js";
+import { showNewsLoading } from "./ui/loadingUI.js";
 
-  const country = document.createElement("p");
-  country.textContent = `Country: ${data.countryName}`;
+import { saveCountry, getSavedCountry } from "./utils.mjs";
+import { renderCountryDropdown } from "./ui/countryDropdown.js";
+import { initCountryEvents } from "./events/countryEvents.js";
+import { getAllCountries } from "./services/countryService.js";
 
-  container.appendChild(country);
+async function loadFromCountry(countryData) {
+  // fetch countries list
+  const countries = await getAllCountries();
+
+  // render dropdown + events
+  renderCountryDropdown(countries, countryData.countryCode);
+  initCountryEvents(countries);
+
+  // render location
+  renderLocation(countryData);
+
+  // render flag
+  const flagData = await getCountryFlag(countryData.countryCode);
+  renderFlag(flagData);
+
+  // load news
+  showNewsLoading(countryData.countryName);
+  const articles = await getNews(countryData.countryName);
+  renderNews(articles);
 }
 
-async function displayFlag() {
-  const countryCode = data.countryCode;
-  const flagData = await getCountryFlag(countryCode);
-  const flagContainer = document.getElementById("countryFlag");
-
-  const image = document.createElement("img");
-  image.src = flagData.rectangle_image_url;
-  image.alt = `${flagData.country} Flag`;
-  image.classList.add("img-fluid");
-
-  flagContainer.appendChild(image);
-}
-
-async function displayNews(country) {
-  const newsContainer = document.getElementById("newsContainer");
-  const countryName = data.countryName;
-
-
+async function initApp() {
   try {
-    const articles = await getNews(countryName);
+    const savedCountry = getSavedCountry();
 
-    // Clear previous content
-    newsContainer.textContent = "";
+    // If localStorage exists → fast load
+    if (savedCountry) {
+      await loadFromCountry(savedCountry);
+      return;
+    }
 
-    // Create title
-    const title = document.createElement("h5");
-    title.textContent = "Latest News";
-    newsContainer.append(title);
+    // Otherwise fetch from IP
+    const data = await getIpInfo();
 
-    // Create article cards
-    articles.forEach((article) => {
-      const card = document.createElement("div");
-      card.className = "card mb-2";
-
-      const cardBody = document.createElement("div");
-      cardBody.className = "card-body";
-
-      const cardTitle = document.createElement("h6");
-      cardTitle.className = "card-title";
-      cardTitle.textContent = article.title;
-
-      const cardText = document.createElement("p");
-      cardText.className = "card-text";
-      cardText.textContent = limitWords(article.body);
-    
-
-      cardText.addEventListener("click", () => {
-        window.open(article.url, "_blank");
-      });
-
-      cardBody.append(cardTitle, cardText);
-      card.append(cardBody);
-      newsContainer.append(card);
+    // save for next visit
+    saveCountry({
+      countryName: data.countryName,
+      countryCode: data.countryCode,
     });
+
+    // normal load
+    await loadFromCountry(data);
   } catch (error) {
-    newsContainer.textContent = `Error fetching news: ${error.message}`;
+    console.error("App failed to load:", error);
   }
 }
 
-showLocation();
-displayFlag();
-displayNews();
+initApp();

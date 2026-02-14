@@ -40,3 +40,29 @@ export async function getCountryFlag(countryCode) {
     return null;
   }
 }
+
+export async function getAllCountries() {
+  const url = "https://restcountries.com/v3.1/all?fields=name,cca2,flags";
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch countries");
+    }
+
+    const data = await response.json();
+
+    // normalize structure for UI
+    return data
+      .map((c) => ({
+        name: c.name.common,
+        code: c.cca2,
+        flag: c.flags?.svg || "",
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  } catch (error) {
+    console.error("Error fetching countries:", error);
+    return [];
+  }
+}
