@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap";
+import * as bootstrap from "bootstrap";
 import "../css/style.css";
 
 import { getIpInfo, getCountryFlag } from "./services/countryService.js";
@@ -104,6 +104,30 @@ document.querySelectorAll(".sparkle-btn").forEach((btn) => {
     this.classList.remove("sparkle");
     void this.offsetWidth; // restart animation
     this.classList.add("sparkle");
+  });
+});
+
+// Welcome modal logic
+document.addEventListener("DOMContentLoaded", () => {
+  const modalElement = document.getElementById("welcomeModal");
+  const dontShowCheckbox = document.getElementById("dontShowAgain");
+
+  const welcomeModal = new bootstrap.Modal(modalElement, {
+    focus: true,
+  });
+
+  // Check if user already chose not to show
+  const hideModal = localStorage.getItem("hideWelcomeModal");
+
+  if (!hideModal) {
+    welcomeModal.show();
+  }
+
+  // When modal closes, check checkbox state
+  modalElement.addEventListener("hidden.bs.modal", () => {
+    if (dontShowCheckbox.checked) {
+      localStorage.setItem("hideWelcomeModal", "true");
+    }
   });
 });
 

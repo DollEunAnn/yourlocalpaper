@@ -14,6 +14,7 @@
 
     <!-- Your JS -->
     <script type="module" src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   </head>
 
   <body>
@@ -56,6 +57,86 @@
         <div id="newsContainer"></div>
       </div>
     </main>
+    <!-- Preview Modal -->
+    <div class="modal fade" id="articleModal" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle"></h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <img id="modalImage" class="img-fluid mb-3 d-none" />
+            <p id="modalDescription"></p>
+            <a id="modalLink" target="_blank" class="btn pill-btn mt-2">
+              Read Full Article
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Welcome Modal -->
+    <div class="modal fade" id="welcomeModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Welcome!</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <p>Welcome to Your Local Paper!</p>
+            <p>How to use:</p>
+            <p>
+              <span><i class="bi bi-pin-map-fill"></i></span>
+              The website will initially load the news where is your current
+              location but you can change the country using the dropdown menu
+              above and it wll be remember the next time you visit.
+            </p>
+            <p>
+              <span><i class="bi bi-eye-fill"></i></span> Click/Tap quick view
+              to see a preview of each article.
+            </p>
+            <p>
+              <span><i class="bi bi-hand-index-thumb-fill"></i></span> Simply
+              click on any article to read the full story.
+            </p>
+            <p>
+              <span><i class="bi bi-sun-fill"></i></span>Toggle the theme using
+              the sun/moon button in the top right corner.
+            </p>
+
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="dontShowAgain"
+              />
+              <label class="form-check-label" for="dontShowAgain">
+                Do not show again
+              </label>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn pill-btn" data-bs-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <footer class="bg-secondary px-3">
       <p class="text-white mb-0 py-3">© 2026 Your Local Paper by Eunice</p>
     </footer>

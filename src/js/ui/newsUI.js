@@ -1,4 +1,5 @@
 import { limitWords } from "../utils.mjs";
+import * as bootstrap from "bootstrap";
 
 export function renderNews(articles) {
   const newsContainer = document.getElementById("newsContainer");
@@ -33,13 +34,14 @@ export function renderNews(articles) {
 
     const quickViewBtn = document.createElement("button");
     quickViewBtn.className = "pill-btn mt-2";
+    quickViewBtn.dataset.id = article.uri;
     quickViewBtn.innerHTML = `
       <i class="bi bi-eye"></i>
       Quick View
     `;
 
     quickViewBtn.addEventListener("click", () => {
-      alert(`${article.title}\n\n${article.body}`);
+      openArticleModal(article);
     });
 
     cardText.addEventListener("click", () => {
@@ -50,4 +52,30 @@ export function renderNews(articles) {
     card.append(cardBody);
     newsContainer.append(card);
   });
+}
+
+function openArticleModal(article) {
+  const modal = new bootstrap.Modal(document.getElementById("articleModal"));
+
+  const title = document.getElementById("modalTitle");
+  const image = document.getElementById("modalImage");
+  const description = document.getElementById("modalDescription");
+  const link = document.getElementById("modalLink");
+
+  title.textContent = article.title;
+  description.textContent =
+    limitWords(article.body, 150) ||
+    article.description ||
+    "No preview available.";
+
+  if (article.image) {
+    image.src = article.image;
+    image.classList.remove("d-none");
+  } else {
+    image.classList.add("d-none");
+  }
+
+  link.href = article.url;
+
+  modal.show();
 }

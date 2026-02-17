@@ -10,5 +10,3 @@ export function renderLocation(data) {
 
   countryContainer.appendChild(country);
 }
-
-export function renderTrueLocation(data) {}
