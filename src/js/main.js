@@ -15,7 +15,15 @@ import { renderCountryDropdown } from "./ui/countryDropdown.js";
 import { initCountryEvents } from "./events/countryEvents.js";
 import { getAllCountries } from "./services/countryService.js";
 
+let allArticles = [];
+
+let currentPage = 1;
+const articlesPerPage = 10; // you can change this
+
 async function loadFromCountry(countryData) {
+  // reset before assigning new articles
+  allArticles = []; 
+
   // fetch countries list
   const countries = await getAllCountries();
 
@@ -33,7 +41,12 @@ async function loadFromCountry(countryData) {
   // load news
   showNewsLoading(countryData.countryName);
   const articles = await getNews(countryData.countryName);
-  renderNews(articles);
+
+  // renderNews(articles);
+  allArticles = articles;
+
+  currentPage = 1;
+  renderPagination();
 }
 
 async function init() {
@@ -59,6 +72,46 @@ async function init() {
     await loadFromCountry(data);
   } catch (error) {
     console.error("App failed to load:", error);
+  }
+}
+
+// Pagination logic
+function renderPagination() {
+  const start = (currentPage - 1) * articlesPerPage;
+  const end = start + articlesPerPage;
+
+  const paginatedItems = allArticles.slice(start, end);
+
+  renderNews(paginatedItems);
+  renderPaginationButtons();
+}
+
+function renderPaginationButtons() {
+  const totalPages = Math.ceil(allArticles.length / articlesPerPage);
+  const paginationContainer = document.getElementById("pagination");
+
+  paginationContainer.innerHTML = "";
+
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+
+    btn.className = `btn btn-sm mx-1 ${
+      i === currentPage ? "pill-btn-active" : "pill-btn"
+    }`;
+
+    btn.textContent = i;
+
+    btn.addEventListener("click", () => {
+      currentPage = i;
+      renderPagination();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+
+    paginationContainer.appendChild(btn);
   }
 }
 

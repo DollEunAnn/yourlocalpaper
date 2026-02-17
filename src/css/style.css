@@ -37,6 +37,14 @@ main {
   }
 }
 
+.pill-btn-active {
+  background-color: #00838d;
+  border-radius: 30px;
+  padding: 5px 15px;
+  border-color: transparent;
+  color:white;
+}
+
 .card-subtitle {
   color: #00838d;
 }
