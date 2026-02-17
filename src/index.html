@@ -1,30 +1,63 @@
 <!doctype html>
-<html>
+<html data-bs-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="../src/css/style.css" rel="stylesheet" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Your JS -->
     <script type="module" src="js/main.js"></script>
-    <link rel="stylesheet" href="css/style.css" />
   </head>
 
   <body>
     <header>
-      <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">
+      <nav class="navbar px-3 py-4">
+        <!-- branding -->
+        <div class="navbar-brand">
+          <div class="d-flex gap-2">
             <div id="countryFlag"></div>
-            Your Local Paper
-          </a>
+            <img
+              src="../images/logo-dark.svg"
+              alt="Your Local Paper Logo"
+              width="60px"
+              id="logo"
+            />
+          </div>
+          <!-- Country Name -->
+          <div id="locationInfo"></div>
+        </div>
+        <!-- theme toggle -->
+        <div class="">
+          <button
+            type="button"
+            class="btn btn-outline-secondary btn-lg sparkle-btn"
+            id="themeToggle"
+          >
+            <i class="bi bi-sun"></i>
+          </button>
         </div>
       </nav>
     </header>
     <main>
-      <div id="locationInfo" class="p-3"></div>
-      <div id="countrySelectContainer"></div>
-
-      <div id="newsContainer" class="text-white p-3"></div>
+      <!-- Countries Dropdown -->
+      <div class="px-3">
+        <div id="countrySelectContainer"></div>
+      </div>
+      <div class="px-3">
+        <p>Latest News:</p>
+        <!-- Articles Container -->
+        <div id="newsContainer"></div>
+      </div>
     </main>
-    <footer></footer>
+    <footer class="bg-secondary px-3">
+      <p class="text-white mb-0 py-3">© 2026 Your Local Paper by Eunice</p>
+    </footer>
   </body>
 </html>

@@ -1,10 +1,14 @@
 export function renderLocation(data) {
-  const container = document.getElementById("locationInfo");
+  // country
+  const countryContainer = document.getElementById("locationInfo");
 
-  container.textContent = "";
+  countryContainer.textContent = "";
 
   const country = document.createElement("p");
-  country.textContent = `Country: ${data.countryName}`;
+  country.classList.add("mt-2");
+  country.textContent = `${data.countryName} Edition`;
 
-  container.appendChild(country);
+  countryContainer.appendChild(country);
 }
+
+export function renderTrueLocation(data) {}

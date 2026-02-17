@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
+import "../css/style.css";
 
 import { getIpInfo, getCountryFlag } from "./services/countryService.js";
 import { getNews } from "./services/newsService.js";
@@ -22,7 +23,7 @@ async function loadFromCountry(countryData) {
   renderCountryDropdown(countries, countryData.countryCode);
   initCountryEvents(countries);
 
-  // render location
+  // render location / chosen location from localStorage
   renderLocation(countryData);
 
   // render flag
@@ -35,7 +36,7 @@ async function loadFromCountry(countryData) {
   renderNews(articles);
 }
 
-async function initApp() {
+async function init() {
   try {
     const savedCountry = getSavedCountry();
 
@@ -61,4 +62,49 @@ async function initApp() {
   }
 }
 
-initApp();
+// Theme toggle logic
+const themeToggleBtn = document.getElementById("themeToggle");
+const htmlElement = document.documentElement; // <html>
+const icon = themeToggleBtn.querySelector("i");
+const logo = document.getElementById("logo");
+
+// Load saved theme
+const savedTheme = localStorage.getItem("theme");
+
+if (savedTheme) {
+  htmlElement.setAttribute("data-bs-theme", savedTheme);
+  updateIcon(savedTheme);
+}
+
+// Toggle theme on click
+themeToggleBtn.addEventListener("click", () => {
+  const currentTheme = htmlElement.getAttribute("data-bs-theme");
+  const newTheme = currentTheme === "light" ? "dark" : "light";
+
+  htmlElement.setAttribute("data-bs-theme", newTheme);
+  localStorage.setItem("theme", newTheme);
+
+  updateIcon(newTheme);
+});
+
+function updateIcon(theme) {
+  if (theme === "dark") {
+    icon.classList.remove("bi-sun");
+    icon.classList.add("bi-moon");
+    logo.src = "../images/logo-light.svg"; // Use light logo in dark mode
+  } else {
+    icon.classList.remove("bi-moon");
+    icon.classList.add("bi-sun");
+    logo.src = "../images/logo-dark.svg"; // Use dark logo in light mode
+  }
+}
+
+document.querySelectorAll(".sparkle-btn").forEach((btn) => {
+  btn.addEventListener("click", function () {
+    this.classList.remove("sparkle");
+    void this.offsetWidth; // restart animation
+    this.classList.add("sparkle");
+  });
+});
+
+init();
