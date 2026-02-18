@@ -1,13 +1,6 @@
-import { getCountryFlag } from "../services/countryService.js";
-import { getNews } from "../services/newsService.js";
-
-import { renderFlag } from "../ui/flagUI.js";
-import { renderNews } from "../ui/newsUI.js";
 import { renderLocation } from "../ui/locationUI.js";
-
-import { showNewsLoading } from "../ui/loadingUI.js";
-
 import { saveCountry } from "../utils.mjs";
+import { loadFromCountry } from "../main.js";
 
 export function initCountryEvents(countries) {
   const select = document.getElementById("countrySelect");
@@ -28,13 +21,6 @@ export function initCountryEvents(countries) {
     renderLocation(countryData);
     saveCountry(countryData);
 
-    // update flag
-    const flagData = await getCountryFlag(countryCode);
-    renderFlag(flagData);
-
-    // update news
-    showNewsLoading(selected.name);
-    const articles = await getNews(selected.name);
-    renderNews(articles);
+    await loadFromCountry(countryData);
   });
 }

@@ -20,7 +20,7 @@ let allArticles = [];
 let currentPage = 1;
 const articlesPerPage = 10; // you can change this
 
-async function loadFromCountry(countryData) {
+export async function loadFromCountry(countryData) {
   // reset before assigning new articles
   allArticles = [];
 
@@ -29,6 +29,7 @@ async function loadFromCountry(countryData) {
 
   // render dropdown + events
   renderCountryDropdown(countries, countryData.countryCode);
+
   initCountryEvents(countries);
 
   // render location / chosen location from localStorage
@@ -44,7 +45,6 @@ async function loadFromCountry(countryData) {
 
   // renderNews(articles);
   allArticles = articles;
-
   currentPage = 1;
   renderPagination();
 }
