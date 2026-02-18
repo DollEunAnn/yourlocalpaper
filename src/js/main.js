@@ -22,7 +22,7 @@ const articlesPerPage = 10; // you can change this
 
 async function loadFromCountry(countryData) {
   // reset before assigning new articles
-  allArticles = []; 
+  allArticles = [];
 
   // fetch countries list
   const countries = await getAllCountries();
@@ -107,7 +107,7 @@ function renderPaginationButtons() {
 
       window.scrollTo({
         top: 0,
-        behavior: "smooth"
+        behavior: "smooth",
       });
     });
 
